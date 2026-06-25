@@ -1,61 +1,191 @@
-import Joi from "joi";
+import Joi from "joi"; 
+
+const  roles = [
+  "ROOT",
+  "ADMIN",
+  "USER",
+  "GUEST",
+];
 
 const createUserSchema = Joi.object({
-  nombre: Joi.string().required(),
 
-  apellido: Joi.string().required(),
+  nombre: Joi.string()
+  .trim()
+  .min(2)
+  .max(100)
+  .required(),
 
-  email: Joi.string().email().required(),
+  apellido: Joi.string()
+  .trim()
+  .min(2)
+  .max(100)
+  .required(),
 
-  password: Joi.string().min(6).required(),
+  email: Joi.string().email()
+  .trim()
+  .email()
+  .required(),
 
-  edad: Joi.number().required(),
+  password: Joi.string()
+  .min(6)
+  .max(50)
+  .required(),
 
-  sexo: Joi.string().required(),
+  fechaNacimiento: Joi.date()
+  .required(),
 
-  telefono: Joi.string().required(),
+  edad: Joi.number()
+  .integer()
+  .min(1)
+  .max(100)
+  .required()
+  .messages({
+    "number.base": "La edad debe ser numerica",
+    "number.integer": "La edad dabe ser un numero entero",
+    "number.min": "La edad no puede ser menor a 1",
+    "number.max": "La edad debe ser menor a 100"
+  }),
 
-  direccion: Joi.string().required(),
+  genero: Joi.string()
+  .trim()
+  .required(),
 
-  ciudad: Joi.string().required(),
+  telefono: Joi.string()
+  .trim()
+  .min(6)
+  .max(20)
+  .required(),
 
-  pais: Joi.string().required(),
+  direccion: Joi.string()
+  .trim()
+  .max(200)
+  .required(),
 
-  provincia: Joi.string().required(),
+  localidad: Joi.string()
+  .trim()
+  .max(100)
+  .required(),
 
-  codigopostal: Joi.string().required()
+  pais: Joi.string()
+  .trim()
+  .max(100)
+  .required(),
+
+  provincia: Joi.string()
+  .trim()
+  .max(100)
+  .required(),
+
+  codigoPostal: Joi.string()
+  .trim()
+  .max(40)
+  .required(),
+
+  role: Joi.string()
+  .valid(...roles)
+  
+  .messages({
+    "any.only": `El rol debe ser uno de los siguientes: ${roles.join(", ")}`,
+  })
 });
 
 const updateUserSchema = Joi.object({
 
-  nombre: Joi.string(),
+  nombre: Joi.string()
+  .trim()
+  .min(2)
+  .max(100),
 
-  apellido: Joi.string(),
+  apellido: Joi.string()
+  .trim()
+  .min(2)
+  .max(100),
 
-  password: Joi.string().min(6),
+  email: Joi.string().email()
+  .trim()
+  .email(),
 
-  edad: Joi.number(),
+  password: Joi.string()
+  .min(6)
+  .max(50),
 
-  sexo: Joi.string(),
+  fechaNacimiento: Joi.date(),
 
-  telefono: Joi.string(),
+  edad: Joi.number()
+  .integer()
+  .min(1)
+  .max(100)
+  .message({
+    "number.base": "La edad debe ser numerica",
+    "number.integer": "La edad dabe ser un numero entero",
+    "number.min": "La edad no puede ser menor a 1",
+    "number.max": "La edad debe ser menor a 100"
+  }),
 
-  direccion: Joi.string(),
+  genero: Joi.string()
+  .trim(),
 
-  ciudad: Joi.string(),
+  telefono: Joi.string()
+  .trim()
+  .min(6)
+  .max(20),
 
-  pais: Joi.string(),
+  direccion: Joi.string()
+  .trim()
+  .max(200),
 
-  provincia: Joi.string(),
+  localidad: Joi.string()
+  .trim()
+  .max(100),
 
-  codigopostal: Joi.string()
+  pais: Joi.string()
+  .trim()
+  .max(100),
+
+  provincia: Joi.string()
+  .trim()
+  .max(100),
+
+  codigoPostal: Joi.string()
+  .trim()
+  .max(40),
+  
+  role: Joi.string()
+  .valid(...roles)
+  .default("USER")
+  .messages({
+    "any.only": `El rol debe ser uno de los siguientes: ${roles.join(", ")}`,
+  })
+
+}).min(1)
+.messages({
+  "object.main":
+  "Debe enviar al menos un campo para actualizar"
 });
+
+//  nombre: Joi.string(),
+//  apellido: Joi.string(),
+//  password: Joi.string().min(6),
+//  edad: Joi.number(),
+//  genero: Joi.string(),
+//  telefono: Joi.string(),
+//  direccion: Joi.string(),
+//  localidad: Joi.string(),
+//  pais: Joi.string(),
+//  provincia: Joi.string(),
+//  codigoPostal: Joi.string(),
+//});
 
 const userParamsSchema = Joi.object({
   id: Joi.string()
   .hex()
   .length(24)
   .required()
-})
+  .messages({
+    "string.hex": "El id debe ser un ObjectId valido",
+    "string.length": "El id debe tener 24 caracteres",
+    "any.required": "El id es obligatorio"
+  })
+});
 
 export { createUserSchema, updateUserSchema, userParamsSchema };
