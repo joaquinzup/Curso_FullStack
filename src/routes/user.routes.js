@@ -7,25 +7,17 @@ import {
   deleteUser,
 } from "../controllers/user.controller.js";
 
-/*import { authMiddleware } from "../middlewares/auth.middlewares.js";
+import { authMiddleware } from "../middlewares/auth.middlewares.js";
 import { authorizeRoles } from "../middlewares/role.middlewares.js";
-*/
+
 const router = express.Router();
 
-router.get("/users", 
-    
-    getUsers);
+router.get("/users",authMiddleware, authorizeRoles("ROOT", "ADMIN", "USER"), getUsers);
 
-router.post("/users",
-  
-     createUser);
+router.post("/users",authMiddleware, authorizeRoles("ROOT", "ADMIN", "USER"), createUser);
 
-router.put("/users/:id",
-  
-     updateUser);
+router.put("/users/:id",authMiddleware, authorizeRoles("ROOT", "ADMIN", "USER"), updateUser);
 
-router.delete("/users/:id",
-  
-     deleteUser);
+router.delete("/users/:id",authMiddleware, authorizeRoles("ROOT", "ADMIN", "USER"), deleteUser);
 
 export default router;

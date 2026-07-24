@@ -18,7 +18,7 @@ const rateLimiter = rateLimit({
     },
     handler: async (req,res) => {
         const ip = req.ip || req.socket.remoteAddress || "unknown";
-        await SecurityLog.create({
+        await securityLog.create({
             eventType: "rate_limit",
             ip,
             method: req.method,

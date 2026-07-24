@@ -34,7 +34,7 @@ const loginService = async (data) => {
 
         const payload = {
             userId: user._id,
-            role: user._role,
+            role: user.role,
         };
 
         const token = jwt.sign(

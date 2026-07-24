@@ -14,12 +14,18 @@ import {
 import {
     successResponse,
     errorResponse,
+    forbiddenResponse,
 } from "../helper/response.helper.js"
 
 const getUsers = async (req, res) => {
     try {
-        const users = await getUsersService(req.query);
-        
+        const {email, id} = req.query;
+        const users = await getUsersService({
+          email,
+          id,
+          requesterRole: req.user?.role,
+          requesterId: req.user?.userId,
+        });
         return successResponse(
             res,
             users,
@@ -44,7 +50,7 @@ const createUser = async (req, res) => {
             res,
             "Error de validacion",
             400,
-            error.datails
+            error.details
            );
         }
         const user = await createUserService(req.body)

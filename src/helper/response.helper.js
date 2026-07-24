@@ -12,6 +12,15 @@ export const successResponse = (
     });
 };
 
+export const forbiddenResponse = (res, message = "Acceso Denegado", errors = null) => {
+return res.status(403).json({
+    success: false,
+    statusCode: 403,
+    message,
+    errors,
+});
+};
+
 export const errorResponse = (
     res,
     message = "Error interno del servidor",
