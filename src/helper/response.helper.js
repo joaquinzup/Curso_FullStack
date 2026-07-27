@@ -5,7 +5,7 @@ export const successResponse = (
     statusCode = 200
 ) => {
     return res.status(statusCode).json({
-        succes: true,
+        success: true,
         statusCode,
         message,
         data,

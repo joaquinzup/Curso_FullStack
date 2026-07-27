@@ -18,12 +18,6 @@ if (!role) {
         message: "No tienes permisos para ver usuarios",
     };
 }
-if (role === "GUEST") {
-    throw {
-        statusCode: 403,
-        message: "No tienes permisos para ver usuarios",
-    };
-}
 
     if (id) {
         if (!mongoose.Types.ObjectId.isValid(id)){
@@ -66,7 +60,7 @@ if (role === "GUEST") {
                     message: "Usuario no encontrado",
                 };
             }
-            if (role === "USER" && user._id.toString() !== currentUserId){
+            if (role === "GUEST" && user._id.toString() !== currentUserId){
                 throw {
                     statusCode: 403,
                     message: "No tienes permisos para ver este usuario",
@@ -76,7 +70,7 @@ if (role === "GUEST") {
             if (role === "ADMIN" && user.role === "ROOT") {
                 throw {
                     statusCode: 403,
-                    message: "No tienes permitidos para ver usuarios root",
+                    message: "No tienes permisos para ver usuarios root",
                 };
             }
 
@@ -84,6 +78,12 @@ if (role === "GUEST") {
         }
 
         if (role === "USER") {
+    return await User.find({ role: { $in: ["USER", "GUEST"] } })
+        .select("-password")
+        .sort({ nombre: 1 });
+}
+
+        if (role === "GUEST") {
             const user = await User.findById(currentUserId).select("-password");
             if (!user) {
                 throw {
@@ -91,7 +91,7 @@ if (role === "GUEST") {
                     message: "Usuario no encontrado",
                 };
             }
-            return user;
+            return [user];
         }
 
         if (role === "ADMIN") {
@@ -214,6 +214,7 @@ const updateUserService = async (id, data) => {
                 message: "El email no puede modificarse",
             };
         }
+
         const allowedFields = [
             "nombre",
             "apellido",
@@ -226,6 +227,7 @@ const updateUserService = async (id, data) => {
             "provincia",
             "pais",
             "codigoPostal",
+            "role",
         ];
         allowedFields.forEach((field) => {
             if (data[field] !== undefined) {
@@ -253,7 +255,8 @@ const updateUserService = async (id, data) => {
             localidad: user.localidad,
             provincia: user.provincia,
             pais: user.pais,
-            codigoPostal: user.codigoPostal
+            codigoPostal: user.codigoPostal,
+            role: user.role,
         };
     } catch (error){
         console.error(
