@@ -43,7 +43,6 @@ const getUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        //console.log('🎮 CONTROLLER ➡️ createUser')
         const {error} = createUserSchema.validate(req.body)
         if (error) {
            return errorResponse(
@@ -54,11 +53,19 @@ const createUser = async (req, res) => {
            );
         }
         const user = await createUserService(req.body)
-        res.status(201).json(user)
+        return successResponse(
+            res,
+            user,
+            "Usuario creado correctamente",
+            201
+        );
     } catch (error) {
-        res.status(500).json({
-            error: error.message
-        })
+        return errorResponse(
+            res,
+            error.message || "Error interno del servidor",
+            error.statusCode || 500,
+            error.errors || null
+        );
     }
 }
 
