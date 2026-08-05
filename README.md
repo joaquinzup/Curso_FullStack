@@ -290,11 +290,5 @@ En errores, `success: false` y opcionalmente `errors` con el detalle de validaci
 
 ---
 
-## Notas y mejoras pendientes (detectadas en el código)
-
-- `scripts/test.security.js` es solo un placeholder, no ejecuta ninguna petición real todavía.
-- En `bruteForceMiddleware`, la clave usa `req.body?.mail` en vez de `req.body?.email` — como el body real manda `email`, la parte de email de la clave de fuerza bruta siempre cae en `"unknown"`.
-- `role.middlewares.js` (`authorizeRoles`) no distingue quién puede cambiar el campo `role` al actualizar: cualquier `ROOT` o `ADMIN` que llegue al endpoint puede modificarlo. La restricción de que solo `ROOT` puede cambiar roles está aplicada únicamente en el frontend (ocultando el `<select>` de rol si el usuario logueado no es `ROOT`), no en el backend.
-
 ## Autor: Zupel Joaquin
 

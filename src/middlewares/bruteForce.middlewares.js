@@ -14,7 +14,7 @@ const bruteForceLimiter = new RateLimiterMemory({
 
 const bruteForceMiddleware = async (req, res, next) => {
     const ip = req.ip || req.socket.remoteAddres || "unknown";
-    const key = `${ip}:${req.body?.mail || "unknown"}`;
+    const key = `${ip}:${req.body?.email || "unknown"}`;
 
     try {
         await  bruteForceLimiter.consume(key);
